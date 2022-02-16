@@ -17,6 +17,9 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column()
+  password: string;
+
   @Column({ select: false, nullable: true })
   authConfirmToken: string;
 

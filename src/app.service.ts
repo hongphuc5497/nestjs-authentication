@@ -102,4 +102,29 @@ export class AppService {
       return new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  async verifyAccount(code: string): Promise<any> {
+    try {
+      const user = await this.userRepository.findOne({
+        authConfirmToken: code,
+      });
+
+      if (!user) {
+        return new HttpException(
+          'The code is invalid or expired',
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
+      await this.userRepository.update(
+        { authConfirmToken: user.authConfirmToken },
+        { isVerified: true, authConfirmToken: undefined },
+      );
+      await this.sendConfirmedEmail(user);
+
+      return true;
+    } catch (error) {
+      return new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

@@ -61,7 +61,7 @@ export class AppService {
     }
   }
 
-  async signin(user: User, jwt: JwtService): Promise<any> {
+  async signin(user: User, jwt = JwtService): Promise<any> {
     try {
       const foundUser = await this.userRepository.findOne({
         email: user.email,
